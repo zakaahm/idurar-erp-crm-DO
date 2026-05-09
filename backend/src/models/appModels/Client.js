@@ -18,6 +18,7 @@ const schema = new mongoose.Schema({
   country: String,
   address: String,
   email: String,
+  leadId: { type: mongoose.Schema.ObjectId, ref: 'Lead', default: null },
   createdBy: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
   assigned: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
   created: {

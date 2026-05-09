@@ -27,10 +27,23 @@ const adminSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  createdBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Admin',
+    autopopulate: true,
+  },
+  modified: {
+    type: Date,
+  },
+  modifiedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Admin',
+    autopopulate: true,
+  },
   role: {
     type: String,
-    default: 'owner',
-    enum: ['owner'],
+    default: 'sales',
+    enum: ['owner', 'admin', 'sales'],
   },
 });
 

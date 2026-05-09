@@ -1,6 +1,9 @@
 const create = async (Model, req, res) => {
   // Creating a new document in the collection
   req.body.removed = false;
+  if (req.admin) {
+    req.body.createdBy = req.admin._id;
+  }
   const result = await new Model({
     ...req.body,
   }).save();

@@ -22,10 +22,10 @@ export default function UpgradeButton() {
         }}
         icon={<RocketOutlined />}
         onClick={() => {
-          window.open(`https://entreprise.idurarapp.com`);
+          window.open(`https://www.digitalorbit.be`);
         }}
       >
-        {translate('Try Entreprise Version')}
+        {translate('Naar de website')}
       </Button>
     </Badge>
   );

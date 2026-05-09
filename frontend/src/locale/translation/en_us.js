@@ -407,6 +407,7 @@ const lang = {
   expense_category_list: 'Expense Category List',
   add_new_expense_category: 'Add New Expense Category',
   admin_list: 'Admin List',
+  users: 'Users',
   add_new_admin: 'Add New Admin',
   admin_super_admin: 'Admin Super Admin',
   staff_admin_crud: 'Staff Admin Crud',

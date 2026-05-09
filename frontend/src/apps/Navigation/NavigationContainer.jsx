@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Drawer, Layout, Menu } from 'antd';
+import { useSelector } from 'react-redux';
 
 import { useAppContext } from '@/context/appContext';
 
@@ -10,20 +11,18 @@ import logoText from '@/style/images/logo-text.svg';
 
 import useResponsive from '@/hooks/useResponsive';
 
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
+
 import {
   SettingOutlined,
   CustomerServiceOutlined,
   ContainerOutlined,
   FileSyncOutlined,
   DashboardOutlined,
-  TagOutlined,
-  TagsOutlined,
   UserOutlined,
   CreditCardOutlined,
   MenuOutlined,
-  FileOutlined,
   ShopOutlined,
-  FilterOutlined,
   WalletOutlined,
   ReconciliationOutlined,
 } from '@ant-design/icons';
@@ -42,13 +41,19 @@ function Sidebar({ collapsible, isMobile = false }) {
   const { state: stateApp, appContextAction } = useAppContext();
   const { isNavMenuClose } = stateApp;
   const { navMenu } = appContextAction;
+
+  const currentAdmin = useSelector(selectCurrentAdmin);
+
+  const role = currentAdmin?.role;
+  const canSeeEverything = role === 'admin' || role === 'owner';
+
   const [showLogoApp, setLogoApp] = useState(isNavMenuClose);
   const [currentPath, setCurrentPath] = useState(location.pathname.slice(1));
 
   const translate = useLanguage();
   const navigate = useNavigate();
 
-  const items = [
+  const allItems = [
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
@@ -59,7 +64,16 @@ function Sidebar({ collapsible, isMobile = false }) {
       icon: <CustomerServiceOutlined />,
       label: <Link to={'/customer'}>{translate('customers')}</Link>,
     },
-
+    {
+      key: 'lead',
+      icon: <UserOutlined />,
+      label: <Link to={'/lead'}>{translate('leads')}</Link>,
+    },
+    {
+      key: 'admin',
+      icon: <UserOutlined />,
+      label: <Link to={'/admin'}>{translate('users') || 'Users'}</Link>,
+    },
     {
       key: 'invoice',
       icon: <ContainerOutlined />,
@@ -75,7 +89,6 @@ function Sidebar({ collapsible, isMobile = false }) {
       icon: <CreditCardOutlined />,
       label: <Link to={'/payment'}>{translate('payments')}</Link>,
     },
-
     {
       key: 'paymentMode',
       label: <Link to={'/payment/mode'}>{translate('payments_mode')}</Link>,
@@ -98,12 +111,20 @@ function Sidebar({ collapsible, isMobile = false }) {
     },
   ];
 
+  const allowedForNormalUser = ['dashboard', 'customer', 'lead'];
+
+  const items = canSeeEverything
+    ? allItems
+    : allItems.filter((item) => allowedForNormalUser.includes(item.key));
+
   useEffect(() => {
     if (location)
       if (currentPath !== location.pathname) {
         if (location.pathname === '/') {
           setCurrentPath('dashboard');
-        } else setCurrentPath(location.pathname.slice(1));
+        } else {
+          setCurrentPath(location.pathname.slice(1));
+        }
       }
   }, [location, currentPath]);
 
@@ -111,13 +132,16 @@ function Sidebar({ collapsible, isMobile = false }) {
     if (isNavMenuClose) {
       setLogoApp(isNavMenuClose);
     }
+
     const timer = setTimeout(() => {
       if (!isNavMenuClose) {
         setLogoApp(isNavMenuClose);
       }
     }, 200);
+
     return () => clearTimeout(timer);
   }, [isNavMenuClose]);
+
   const onCollapse = () => {
     navMenu.collapse();
   };
@@ -132,14 +156,11 @@ function Sidebar({ collapsible, isMobile = false }) {
       style={{
         overflow: 'auto',
         height: '100vh',
-
         position: isMobile ? 'absolute' : 'relative',
         bottom: '20px',
         ...(!isMobile && {
-          // border: 'none',
-          ['left']: '20px',
+          left: '20px',
           top: '20px',
-          // borderRadius: '8px',
         }),
       }}
       theme={'light'}
@@ -151,7 +172,14 @@ function Sidebar({ collapsible, isMobile = false }) {
           cursor: 'pointer',
         }}
       >
-        <img src={logoIcon} alt="Logo" style={{ marginLeft: '-5px', height: '40px' }} />
+        <img
+          src={logoIcon}
+          alt="Logo"
+          style={{
+            marginLeft: '-5px',
+            height: '40px',
+          }}
+        />
 
         {!showLogoApp && (
           <img
@@ -165,6 +193,7 @@ function Sidebar({ collapsible, isMobile = false }) {
           />
         )}
       </div>
+
       <Menu
         items={items}
         mode="inline"
@@ -180,9 +209,11 @@ function Sidebar({ collapsible, isMobile = false }) {
 
 function MobileSidebar() {
   const [visible, setVisible] = useState(false);
+
   const showDrawer = () => {
     setVisible(true);
   };
+
   const onClose = () => {
     setVisible(false);
   };
@@ -194,13 +225,13 @@ function MobileSidebar() {
         size="large"
         onClick={showDrawer}
         className="mobile-sidebar-btn"
-        style={{ ['marginLeft']: 25 }}
+        style={{ marginLeft: 25 }}
       >
         <MenuOutlined style={{ fontSize: 18 }} />
       </Button>
+
       <Drawer
         width={250}
-        // style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}
         placement={'left'}
         closable={false}
         onClose={onClose}

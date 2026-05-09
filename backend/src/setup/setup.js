@@ -53,6 +53,7 @@ async function setupApp() {
 
     const PaymentMode = require('../models/appModels/PaymentMode');
     const Taxes = require('../models/appModels/Taxes');
+    const Lead = require('../models/appModels/Lead');
 
     await Taxes.insertMany([{ taxName: 'Tax 0%', taxValue: '0', isDefault: true }]);
     console.log('👍 Taxes created : Done!');
@@ -65,6 +66,88 @@ async function setupApp() {
       },
     ]);
     console.log('👍 PaymentMode created : Done!');
+
+    await Lead.insertMany([
+      {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '+1234567890',
+        company: 'Example Corp',
+        source: 'website',
+        status: 'contacted',
+        nextActionDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 dagen later
+        followUps: [
+          {
+            date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 dagen geleden
+            type: 'call',
+            notes: 'Initial cold call made',
+            outcome: 'No answer, voicemail left',
+          },
+          {
+            date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 dag geleden
+            type: 'call',
+            notes: 'Follow-up call',
+            outcome: 'Spoke briefly, interested but busy',
+          },
+        ],
+        notes: 'Interested in our services, follow up in 2 days',
+      },
+      {
+        name: 'Jane Smith',
+        email: 'jane.smith@example.com',
+        phone: '+0987654321',
+        company: 'Another Company',
+        source: 'referral',
+        status: 'qualified',
+        nextActionDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 week later
+        followUps: [
+          {
+            date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 dagen geleden
+            type: 'email',
+            notes: 'Introductory email sent',
+            outcome: 'Opened and replied positively',
+          },
+          {
+            date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 dagen geleden
+            type: 'meeting',
+            notes: 'Discovery call scheduled',
+            outcome: 'Qualified as potential client, appointment booked for next week',
+          },
+        ],
+        notes: 'Referred by existing client, high potential',
+      },
+      {
+        name: 'Bob Johnson',
+        email: 'bob.johnson@example.com',
+        phone: '+1122334455',
+        company: 'Startup Inc',
+        source: 'social_media',
+        status: 'proposal',
+        nextActionDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 dagen later
+        followUps: [
+          {
+            date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week geleden
+            type: 'call',
+            notes: 'Cold call from LinkedIn lead',
+            outcome: 'Interested, requested more info',
+          },
+          {
+            date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 dagen geleden
+            type: 'email',
+            notes: 'Sent proposal document',
+            outcome: 'Received, asked for clarification on pricing',
+          },
+          {
+            date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 dag geleden
+            type: 'call',
+            notes: 'Follow-up on proposal',
+            outcome: 'Pricing clarified, considering decision',
+          },
+        ],
+        notes: 'Moving to proposal stage, close potential',
+      },
+    ]);
+    console.log('👍 Leads created : Done!');
 
     console.log('🥳 Setup completed :Success!');
     process.exit();

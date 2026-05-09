@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   EyeOutlined,
@@ -46,6 +47,7 @@ export default function DataTable({ config, extra = [] }) {
   const translate = useLanguage();
   const { moneyFormatter } = useMoney();
   const { dateFormat } = useDate();
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -71,17 +73,25 @@ export default function DataTable({ config, extra = [] }) {
   ];
 
   const handleRead = (record) => {
-    dispatch(crud.currentItem({ data: record }));
-    panel.open();
-    collapsedBox.open();
-    readBox.open();
+    if (entity === 'lead') {
+      navigate(`/lead/read/${record._id || record.id}`);
+    } else {
+      dispatch(crud.currentItem({ data: record }));
+      panel.open();
+      collapsedBox.open();
+      readBox.open();
+    }
   };
   function handleEdit(record) {
-    dispatch(crud.currentItem({ data: record }));
-    dispatch(crud.currentAction({ actionType: 'update', data: record }));
-    editBox.open();
-    panel.open();
-    collapsedBox.open();
+    if (entity === 'lead') {
+      navigate(`/lead/update/${record._id || record.id}`);
+    } else {
+      dispatch(crud.currentItem({ data: record }));
+      dispatch(crud.currentAction({ actionType: 'update', data: record }));
+      editBox.open();
+      panel.open();
+      collapsedBox.open();
+    }
   }
   function handleDelete(record) {
     dispatch(crud.currentAction({ actionType: 'delete', data: record }));
@@ -97,10 +107,10 @@ export default function DataTable({ config, extra = [] }) {
   }
 
   let dispatchColumns = [];
-  if (fields) {
-    dispatchColumns = [...dataForTable({ fields, translate, moneyFormatter, dateFormat })];
-  } else {
+  if (dataTableColumns) {
     dispatchColumns = [...dataTableColumns];
+  } else if (fields) {
+    dispatchColumns = [...dataForTable({ fields, translate, moneyFormatter, dateFormat })];
   }
 
   dataTableColumns = [

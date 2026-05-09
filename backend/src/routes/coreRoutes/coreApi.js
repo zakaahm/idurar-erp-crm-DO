@@ -6,15 +6,59 @@ const router = express.Router();
 
 const adminController = require('@/controllers/coreControllers/adminController');
 const settingController = require('@/controllers/coreControllers/settingController');
+const dashboardController = require('@/controllers/appControllers/dashboardController');
 
 const { singleStorageUpload } = require('@/middlewares/uploadMiddleware');
 
 // //_______________________________ Admin management_______________________________
 
-router.route('/admin/read/:id').get(catchErrors(adminController.read));
+router.route('/admin/create').post(
+  adminController.requireAdminRoles,
+  catchErrors(adminController.create)
+);
 
-router.route('/admin/password-update/:id').patch(catchErrors(adminController.updatePassword));
+router.route('/admin/list').get(
+  adminController.requireAdminRoles,
+  catchErrors(adminController.list)
+);
 
+router.route('/admin/listAll').get(
+  adminController.requireAdminRoles,
+  catchErrors(adminController.listAll)
+);
+
+router.route('/admin/search').get(
+  adminController.requireAdminRoles,
+  catchErrors(adminController.search)
+);
+
+router.route('/admin/read/:id').get(
+  adminController.requireSelfOrAdmin,
+  catchErrors(adminController.read)
+);
+
+router.route('/admin/update/:id').patch(
+  adminController.requireSelfOrAdmin,
+  catchErrors(adminController.update)
+);
+
+router.route('/admin/delete/:id').delete(
+  adminController.requireAdminRoles,
+  catchErrors(adminController.delete)
+);
+
+router.route('/admin/password-update/:id').patch(
+  adminController.requireSelfOrAdmin,
+  catchErrors(adminController.updatePassword)
+);
+// for the stats of the dashboard
+//_______________________________ Dashboard _______________________________
+
+router.route('/dashboard/lead-stats').get(catchErrors(dashboardController.getLeadStats));
+
+router.route('/dashboard/sales-stats').get(catchErrors(dashboardController.getSalesStats));
+
+router.route('/dashboard/revenue-stats').get(catchErrors(dashboardController.getRevenueStats));
 //_______________________________ Admin Profile _______________________________
 
 router.route('/admin/profile/password').patch(catchErrors(adminController.updateProfilePassword));

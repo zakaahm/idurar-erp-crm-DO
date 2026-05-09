@@ -1,5 +1,5 @@
 import { Space, Layout, Divider, Typography } from 'antd';
-import logo from '@/style/images/idurar-crm-erp.svg';
+import logo from '@/assests/powerd-by-do.webp';
 import useLanguage from '@/locale/useLanguage';
 import { useSelector } from 'react-redux';
 
@@ -32,7 +32,7 @@ export default function SideContent() {
           Free Open Source ERP / CRM
         </Title>
         <Text>
-          Accounting / Invoicing / Quote App <b /> based on Node.js React.js Ant Design
+          It die draait om JOUW groei, welkom terug om waarde te creëren voor onze klanten. 
         </Text>
 
         <div className="space20"></div>

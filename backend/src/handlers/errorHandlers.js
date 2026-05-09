@@ -9,6 +9,10 @@
 exports.catchErrors = (fn) => {
   return function (req, res, next) {
     return fn(req, res, next).catch((error) => {
+      console.error('Caught backend error in catchErrors:', error);
+      if (res.headersSent) {
+        return next(error);
+      }
       if (error.name == 'ValidationError') {
         return res.status(400).json({
           success: false,

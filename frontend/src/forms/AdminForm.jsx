@@ -80,24 +80,15 @@ export default function AdminForm({ isUpdateForm = false, isForAdminOwner = fals
           },
         ]}
       >
-        <Select>
+      <Select>
           <Select.Option value="owner" disabled={!isForAdminOwner}>
             {translate('Account owner')}
           </Select.Option>
-          <Select.Option value="admin" disabled={isForAdminOwner}>
+          <Select.Option value="admin">
             {translate('super_admin')}
           </Select.Option>
-          <Select.Option value="manager" disabled={isForAdminOwner}>
-            {translate('manager')}
-          </Select.Option>
-          <Select.Option value="employee" disabled={isForAdminOwner}>
-            {translate('employee')}
-          </Select.Option>
-          <Select.Option value="create_only" disabled={isForAdminOwner}>
-            {translate('create_only')}
-          </Select.Option>
-          <Select.Option value="read_only" disabled={isForAdminOwner}>
-            {translate('read_only')}
+          <Select.Option value="sales">
+            {translate('sales')}
           </Select.Option>
         </Select>
       </Form.Item>
@@ -111,7 +102,7 @@ export default function AdminForm({ isUpdateForm = false, isForAdminOwner = fals
         <Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
       </Form.Item>
 
-      {/* <Form.Item
+      { <Form.Item
         name="file"
         label={translate('Photo')}
         valuePropName="fileList"
@@ -120,7 +111,7 @@ export default function AdminForm({ isUpdateForm = false, isForAdminOwner = fals
         <Upload beforeUpload={beforeUpload}>
           <Button icon={<UploadOutlined />}>{translate('click_to_upload')}</Button>
         </Upload>
-      </Form.Item> */}
+      </Form.Item> }
     </>
   );
 }

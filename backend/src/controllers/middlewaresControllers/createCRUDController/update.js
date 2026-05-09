@@ -1,6 +1,10 @@
 const update = async (Model, req, res) => {
   // Find document by id and updates with the required fields
   req.body.removed = false;
+  if (req.admin) {
+    req.body.modifiedBy = req.admin._id;
+  }
+  req.body.modified = Date.now();
   const result = await Model.findOneAndUpdate(
     {
       _id: req.params.id,
