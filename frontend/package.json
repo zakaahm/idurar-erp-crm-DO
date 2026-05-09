@@ -3,7 +3,7 @@
   "version": "4.1.0",
   "engines": {
     "node": "20.X.0",
-    "npm": "10.2.4"
+    "npm": ">=10 <11"
   },
   "type": "module",
   "dependencies": {
